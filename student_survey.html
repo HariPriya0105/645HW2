@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Survey Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        h3 {
+            margin-top: 15px;
+            color: #444;
+        }
+
+        .checkbox-group,
+        .radio-group {
+            margin-top: 5px;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .submit-btn, .cancel-btn {
+            width: 48%;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn {
+            background-color: #9A0000;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background-color: #7A0000;
+        }
+
+        .cancel-btn {
+            background-color: #ccc;
+            color: black;
+        }
+
+        .cancel-btn:hover {
+            background-color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Student Survey Form</h2>
+        <form action="#" method="POST">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required>
+
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required>
+
+            <label for="address">Street Address:</label>
+            <input type="text" id="address" name="address" required>
+
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required>
+
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" required>
+
+            <label for="zip">ZIP Code:</label>
+            <input type="text" id="zip" name="zip" required>
+
+            <label for="phone">Telephone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="date">Date of Survey:</label>
+            <input type="date" id="date" name="date" required>
+
+            <h3>What did you like most about the campus?</h3>
+            <div class="checkbox-group">
+                <input type="checkbox" name="likes" value="students"> Students <br>
+                <input type="checkbox" name="likes" value="location"> Location <br>
+                <input type="checkbox" name="likes" value="campus"> Campus <br>
+                <input type="checkbox" name="likes" value="atmosphere"> Atmosphere <br>
+                <input type="checkbox" name="likes" value="dorms"> Dorm Rooms <br>
+                <input type="checkbox" name="likes" value="sports"> Sports <br>
+            </div>
+
+            <h3>How did you hear about us?</h3>
+            <div class="radio-group">
+                <input type="radio" name="interestSource" value="friends"> Friends <br>
+                <input type="radio" name="interestSource" value="tv"> Television <br>
+                <input type="radio" name="interestSource" value="internet"> Internet <br>
+                <input type="radio" name="interestSource" value="other"> Other <br>
+            </div>
+
+            <label for="recommend">Likelihood of Recommending Us:</label>
+            <select id="recommend" name="recommend">
+                <option value="very_likely">Very Likely</option>
+                <option value="likely">Likely</option>
+                <option value="unlikely">Unlikely</option>
+            </select>
+
+            <label for="raffle">Enter 10 numbers (1-100) separated by commas:</label>
+            <input type="text" id="raffle" name="raffle" pattern="^(\s*\d{1,2}\s*,){9}\s*\d{1,2}\s*$" required placeholder="e.g., 5, 23, 44, 67, 89, 12, 34, 56, 78, 90">
+
+            <label for="comments">Additional Comments:</label>
+            <textarea id="comments" name="comments" rows="4" placeholder="Enter any additional feedback here..."></textarea>
+
+            <div class="button-group">
+                <button type="submit" class="submit-btn">Submit Survey</button>
+                <button type="reset" class="cancel-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
