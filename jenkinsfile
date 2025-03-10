@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "haripriya0105/my-survey-app"
         BUILD_TIMESTAMP = new Date().format("yyyyMMdd-HHmmss", TimeZone.getTimeZone('UTC'))
-        KUBECONFIG_CRED_ID='645hw2-2-config-id'"
+        KUBECONFIG_CRED_ID='645hw2-2-config-id'
         RANCHER_NAMESPACE = "default"
         RANCHER_DEPLOYMENT = "deployment1"
     }
