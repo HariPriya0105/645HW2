@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE = "haripriya0105/my-survey-app"
+        DOCKER_CREDENTIALS_ID = credentials('docker-pass')
+        K8S_NAMESPACE="default"
+        KUBECONFIG_CRED_ID='645hw2-2-config-id'
+    }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/HariPriya0105/645HW2.git'
+            }
+        }
+
+    stages {
+        stage('Build Application') {
+            steps {
+                script{
+                    sh 'npm install'
+                    sh 'npm run build'}
+                
+            }
+        }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                script{
+                    docker.build(DOCKER_IMAGE)
+                    }
+            }
+        }        
+        stage('Push Docker Image') {
+            steps {
+                script{
+                    docker.withRegistry('https://index.docker.io/v1/',DOCKER_CREDENTIALS_ID ){
+                    docker.image(DOCKER_IMAGE).push('latest')
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script{
+                    withKubeConfig([credentialsId:KUBECONFIG_CRED_ID ]){
+                        sh '''
+                            kubectl set image deployment/my-survey-app my-survey-app=${DOCKER_IMAGE}:latest -n ${K8S_NAMESPACE}
+                            kubectl rollout status deployment/my-survey-app -n ${K8S_NAMESPACE}
+                        '''
+                    }
+                }
+            }
+        }
+    }
+}
