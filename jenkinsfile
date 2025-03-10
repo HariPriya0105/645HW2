@@ -2,62 +2,55 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = "haripriya0105/my-survey-app"
-        K8S_NAMESPACE="default"
-        KUBECONFIG_CRED_ID='645hw2-2-config-id'
+        BUILD_TIMESTAMP = new Date().format("yyyyMMdd-HHmmss", TimeZone.getTimeZone('UTC'))
+        KUBECONFIG_CRED_ID='645hw2-2-config-id'"
+        RANCHER_NAMESPACE = "default"
+        RANCHER_DEPLOYMENT = "deployment1"
     }
+    
     stages {
-        stage('Clone Repository') {
+        stage("Checkout Code") {
             steps {
-                git 'https://github.com/HariPriya0105/645HW2.git'
-            }
-        }
-
-        stage('Build Application') {
-            steps {
-                script{
-                    sh 'npm install'
-                    sh 'npm run build'
-                    }   
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script{
-                    sh "docker build -t ${DOCKER_IMAGE}:latest ."
-                    }
-            }
-        }   
-
-        stage('Push Docker Image') {
-            steps {
-                script{
-                   withCredentials([string(credentialsId: 'docker-pass', variable: 'DOCKER_PASSWORD')]) {
-                        sh """
-                            echo "$DOCKER_PASSWORD" | docker login -u your-docker-username --password-stdin
-                            docker push ${DOCKER_IMAGE}:latest
-                        """
-                    }
+                script {
+                    checkout scm
                 }
             }
         }
-
-        stage('Deploy to Kubernetes') {
+        
+        stage("Building Student Survey Application Image") {
             steps {
-                script{
-                    withKubeConfig([credentialsId:KUBECONFIG_CRED_ID ]){
-                        sh '''
-                            kubectl set image deployment/my-survey-app my-survey-app=${DOCKER_IMAGE}:latest -n ${K8S_NAMESPACE}
-                            kubectl rollout status deployment/my-survey-app -n ${K8S_NAMESPACE}
-                        '''
-                    }
+                script {
+                    sh 'echo "Building Docker image..."'
+                    sh "docker login -u haripriya0105 -p Hpriya@1708"
+
+                    // Build Docker image with a timestamped tag
+                    def customImage = docker.build("${DOCKER_IMAGE}:${BUILD_TIMESTAMP}", "--build-arg BUILD_ID=${BUILD_TIMESTAMP} .")
+                }
+            }
+        }
+        
+        stage("Pushing Image to DockerHub") {
+            steps {
+                script {
+                    sh "docker push ${DOCKER_IMAGE}:${BUILD_TIMESTAMP}"
+                }
+            }
+        }
+        
+        stage("Deploying to Rancher") {
+            steps {
+                script {
+                    // sh "kubectl set image deployment/${RANCHER_DEPLOYMENT} container-0=${DOCKER_IMAGE}:${BUILD_TIMESTAMP} -n ${RANCHER_NAMESPACE}"
+                    // sh 'kubectl set image deployment/assign2-deployment container-0=amisha1407/amishafinalnew:${BUILD_TIMESTAMP} -n default'
+                    sh "kubectl set image deployment/${RANCHER_DEPLOYMENT} my-survey-app=${DOCKER_IMAGE}:${BUILD_TIMESTAMP} --namespace=default --insecure-skip-tls-verify"
+                    // sh "kubectl set image deployment/assign2-deployment container-0=amisha1407/amishafinalnew:${BUILD_TIMESTAMP} -n default --insecure-skip-tls-verify"
+                    sh "kubectl rollout restart deployment/${RANCHER_DEPLOYMENT} -n ${RANCHER_NAMESPACE}"
                 }
             }
         }
     }
-}
-
-post {
+    
+    post {
         success {
             echo "✅ Deployment Successful!"
         }
